@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Piccolo blog">
+    <meta name="author" content="Piccolo">
+    <title>Piccolo | {% block title%}Home{% endblock %}</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{{url_for('static',filename='css/bootstrap.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='css/font-awesome.min.css')}}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{{url_for('static',filename='css/main.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='css/code.css')}}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('main.index')}}">Piccolo</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item {% if request.endpoint == 'main.index' %}active{% endif %}">
+                        <a class="nav-link" href="{{ url_for('main.index')}}">主页</a>
+                    </li>
+                    <li class="nav-item {% if request.endpoint == 'main.about_me' %}active{% endif %}">
+                        <a class="nav-link" href="{{url_for('main.about_me')}}">关于</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">管理入口</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{url_for('admin.manage_post')}}">博客</a>
+                            <a class="dropdown-item" href="{{url_for('admin.manage_comment')}}">评论</a>
+                            <a class="dropdown-item" href="#">分类</a>
+                        </div>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Page Content -->
+    <div class="container">
+        {% for message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-{{ message[0] }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message[1] }}
+        </div>
+        {% endfor %}
+        <div class="row">
+            {% block content %}
+            <!-- Blog Entries Column -->
+            <div class="col-md-8 main-content">
+                {% block main_content %}
+                {% endblock main_content %}
+                {% block pagination %}
+                {% endblock pagination %}
+            </div>
+            <!-- Sidebar Widgets Column -->
+            <div class="col-md-4">
+                <!-- Categories Widget -->
+                <div class="card my-4">
+                    <h5 class="card-header">文章分类</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <ul class="list-unstyled mb-0">
+                                    {% for category in categories %}
+                                    {% if loop.index%2 == 1 %}
+                                    <li><a class="link-mute" href="{{url_for('main.show_category', category_id = category.id)}}">{{ category.name }}({{category.posts|length}})</a></li>
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-lg-6">
+                                <ul class="list-unstyled mb-0">
+                                    {% for category in categories %}
+                                    {% if loop.index%2 == 0 %}
+                                    <li><a class="link-mute" href="{{url_for('main.show_category', category_id = category.id)}}">{{ category.name }}({{category.posts|length}})</a></li>
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card my-4">
+                    <h5 class="card-header">文章标签</h5>
+                    <div class="card-body">
+                        {% for tag in tags %}
+                        <button type="button" class="btn btn-dark mx-1 my-1 px-1 py-0">
+                            <a class="link-mute" href="{{url_for('main.show_tag', tag_id = tag.id)}}">{{tag.name}} &nbsp</a><span class="badge badge-dark">{{tag.posts|length}}</span>
+                        </button>
+                        {%endfor%}
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </div>
+    {% block footer %}
+    <footer class="py-3 bg-light">
+        <div class="container footer-container">
+            <span class="mx-1">Powered by <a class="link-mute" href="#">flask</a></span>|
+            <span class="mx-1"> @2019 &nbsp;<i class="fa fa-user" aria-hidden="true"></i>&nbsp piccolo</span>|
+            {% if current_user.is_authenticated %}
+            <span class="mx-1"> <i class="fa fa-sign-out" aria-hidden="true"></i><a class="link-mute" href="{{ url_for('auth.logout')}}">&nbsp logout</a></span>
+            {% else %}
+            <span class="mx-1"> <i class="fa fa-sign-in" aria-hidden="true"></i><a class="link-mute" href="{{ url_for('auth.login')}}">&nbsp login</a></span>
+            {% endif %}
+        </div>
+    </footer>
+    {% endblock footer %}
+    <!-- Bootstrap core JavaScript -->
+    <script src="{{url_for('static',filename='js/jquery-slim.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/popper.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
+    {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
+    {{ moment.lang("zh-CN") }}
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

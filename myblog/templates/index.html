@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% from 'macros/pagination.html' import render_pagination %}
+{% block main_content %}
+{% for post in posts %}
+    <div class="card mb-4">
+    <div class="card-body">
+        <h2 class="card-title">{{ post.title }}</h2>
+        <p class="card-text">{{ post.body_html | striptags | truncate }}</p>
+        <a href="{{url_for('main.show_post',post_id=post.id, from_index=True)}}" class="btn btn-dark">Read More &rarr;</a>
+    </div>
+    <div class="card-footer text-muted post-foot">
+        <i class="fa fa-calendar-o" aria-hidden="true"></i>
+        创建于: {{ moment(post.timestamp).format('LL')}}
+        <span class="post-foot-divider">|</span>
+        <i class="fa fa-folder-o" aria-hidden="true"></i>
+        分类于: <a class="link-mute" href="{{url_for('main.show_category', category_id = post.category.id)}}">{{ post.category.name }}</a>
+        <span class="post-foot-divider">|</span>
+        <i class="fa fa-eye" aria-hidden="true"></i>
+        阅读次数: {{post.read_count}}
+    </div>
+</div>
+{% endfor %}
+{% endblock main_content %}
+
+{% block pagination %}
+<!-- Pagination -->
+{{render_pagination(pagination)}}
+{% endblock pagination %}

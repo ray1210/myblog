@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% from 'macros/form.html' import render_form %}
+
+{% block title %}新建博客{% endblock %}
+
+{% block main_content %}
+<div class="card">
+  <div class="card-header">新建博客</div>
+  <div class="card-body">
+      <form method="post" action="{{url_for('admin.new_post')}}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <div class="form-group">
+              <label class="form">分类</label>
+              <div class="form-control" style="height: auto">
+               {% for category in categories %}
+
+                           <input type="radio" value="{{category.name}}" name="categories">                            
+                            <label>{{category.name}} : </label>
+                            {% endfor %}
+              <button class="btn btn-primary btn-sm ml-2" onclick="return onAddCategoryClick(this);">add</button>
+                  </div>
+
+          </div>
+           <div class="form-group">
+              <label>标签</label>
+               <div class="form-control" style="height: auto">
+               {% for tag in tags %}
+
+                           <input type="checkbox" value="{{tag.name}}" name="tags">
+                                 
+                            <label>{{tag.name}} : </label>
+                            {% endfor %}
+              <button class="btn btn-primary btn-sm ml-2" onclick="return onAddTagClick(this);">add</button>
+                  </div>
+          </div>
+          <div class="form-group">
+              <label for="post_title">标题</label>
+              {{ form.title(id="post_title", class="form-control") }}
+          </div>
+          <div class="form-group">
+              <label for="post_body">内容</label>
+              {{ form.body(id="post_body", class="form-control", rows="15") }}
+          </div>
+          <button type="submit" class="btn btn-primary" onclick="return onSubmitClick()">提交</button>
+      </form>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    function onAddCategoryClick(obj) {
+        var cates = document.getElementsByName("categories");
+
+        var word = prompt("please input new category name","");
+        var i;
+        if(word.length == 0)
+            return false;
+        for(i=0;i<cates.length;i++)
+        {
+
+            if(cates[i].value == word)
+            {
+                alert("分类已存在");
+                return false;
+            }
+        }
+        var newTag = document.createElement("input")
+        var newLabel = document.createElement("label");
+        newLabel.innerText = word+"  :  ";
+        newTag.type = "radio" ;
+        newTag.name = "categories" ;
+        newTag.value = word;
+        obj.insertAdjacentElement('beforebegin',newLabel);
+        newLabel.insertAdjacentElement('beforebegin',newTag);
+        return false;
+    }
+     function onAddTagClick(obj) {
+  var tags = document.getElementsByName("tags");
+
+        var word = prompt("please input new tag name","");
+        var i;
+        if(word.length == 0)
+            return false;
+        for(i=0;i<tags.length;i++)
+        {
+            if(tags[i].value == word)
+            {
+                alert("标签已存在");
+                return false;
+            }
+        }
+        var newTag = document.createElement("input")
+        var newLabel = document.createElement("label");
+        newLabel.innerText = word+"  :  ";
+        newTag.type = "checkbox" ;
+        newTag.name = "tags" ;
+        newTag.value = word;
+        obj.insertAdjacentElement('beforebegin',newLabel);
+        newLabel.insertAdjacentElement('beforebegin',newTag);
+
+        return false;
+    }
+    function onSubmitClick()
+    {
+        var cates = document.getElementsByName("categories");
+        var tags = document.getElementsByName("tags");
+        var cate_selected = 0;
+        var tag_select = 0 ;
+
+        for(var i=0 ; i<cates.length;i++)
+        {
+            if(cates[i].checked)
+            {
+                cate_selected = 1;
+                break;
+            }
+        }
+
+        for(var i=0 ; i<tags.length;i++)
+        {
+            if(tags[i].checked)
+            {
+                tag_select = 1;
+                break;
+            }
+        }
+
+        if(cate_selected&&tag_select)
+        {
+
+            return true;
+        }
+        alert("please choose category and tags for the post");
+        return false;
+    }
+</script>
+{% endblock %}

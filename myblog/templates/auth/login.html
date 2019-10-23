@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% from 'macros/form.html' import render_form %}
+
+{% block title %}Login{% endblock %}
+
+{% block main_content %}
+<div class="h100 justify-content-center login-card">
+
+{{ render_form(form, extra_classes='col-6') }}
+
+</div>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
+

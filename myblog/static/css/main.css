@@ -1,0 +1,70 @@
+
+body {
+  padding-top: 56px;
+}
+
+.hr-head{
+  margin-top: inherit;
+  margin-bottom: 0;
+}
+
+.post-small-head
+{
+  height: 100px;
+  margin: 0 auto;
+}
+
+.main-content {
+  margin-top: 1.5rem;
+}
+
+.post-foot-divider {
+  margin: 0 0.15rem;
+}
+
+.post-foot {
+  font-size: 0.5rem;
+}
+
+.link-mute {
+  color:inherit;
+}
+
+.tag-cloud {
+  text-align: center;
+}
+.tag-cloud a {
+  display: inline-block;
+  margin: 10px;
+}
+
+.comment-card .form-control{
+  font-size: 0.8rem;
+}
+
+.footer-container{
+  text-align: center;
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.login-card {
+  padding-top: 20%;
+  padding-left: 100px;
+
+
+}
+
+.page-link {
+  color: #343a40;
+}
+
+.page-item.active
+.page-link
+{
+  background-color: #343a40;
+  border-color: #343a40;
+}
+.card{
+  border: none;
+}

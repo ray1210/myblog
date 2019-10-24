@@ -10,7 +10,7 @@ else:
 
 
 class BaseConfig(object):
-    SECRET_KEY = os.getenv('SECRET_KEY', 'dev key')
+    SECRET_KEY = os.getenv('SECRET_KEY', 'wPCaYfo1TbEtF2uSnA9m0w')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MYBLOG_POST_PER_PAGE = 10
     MYBLOG_COMMENT_PER_PAGE = 10
@@ -30,8 +30,8 @@ class TestingConfig(BaseConfig):
 
 
 class ProductionConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', prefix + os.path.join(basedir, 'data.db'))
-
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://xielei:1234567890@127.0.0.1:3306/myblog'
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
 config = {
     'development': DevelopmentConfig,

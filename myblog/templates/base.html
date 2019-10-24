@@ -109,7 +109,7 @@
     {% block footer %}
     <footer class="py-3 bg-light">
         <div class="container footer-container">
-            <span class="mx-1">Powered by <a class="link-mute" href="#">flask</a></span>|
+            <span class="mx-1">Powered by <a class="link-mute" href="https://github.com/pallets/flask">flask</a></span>|
             <span class="mx-1"> @2019 &nbsp;<i class="fa fa-user" aria-hidden="true"></i>&nbsp piccolo</span>|
             {% if current_user.is_authenticated %}
             <span class="mx-1"> <i class="fa fa-sign-out" aria-hidden="true"></i><a class="link-mute" href="{{ url_for('auth.logout')}}">&nbsp logout</a></span>

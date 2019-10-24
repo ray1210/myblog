@@ -6,10 +6,8 @@ from myblog.models import Category, Post, Tag, Admin, Comment
 
 fake = Faker()
 
-def fake_categories(count=5):
-    category = Category(name='Default')
-    db.session.add(category)
 
+def fake_categories(count=5):
     for i in range(count):
         category = Category(name=fake.word())
         db.session.add(category)
@@ -20,9 +18,6 @@ def fake_categories(count=5):
 
 
 def fake_tags(count=10):
-    tag = Tag(name='Default')
-    db.session.add(tag)
-
     for i in range(count):
         tag = Tag(name=fake.word())
         db.session.add(tag)
@@ -100,3 +95,10 @@ def fake_comments(count=200):
         db.session.add(comment)
     db.session.commit()
 
+
+def fake_default():
+    tag = Tag(name='默认')
+    category = Category(name='默认')
+    db.session.add(tag)
+    db.session.add(category)
+    db.session.commit()

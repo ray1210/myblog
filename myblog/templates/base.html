@@ -13,6 +13,7 @@
     <!-- Custom styles for this template -->
     <link href="{{url_for('static',filename='css/main.css')}}" rel="stylesheet">
     <link href="{{url_for('static',filename='css/code.css')}}" rel="stylesheet">
+
 </head>
 
 <body>
@@ -37,7 +38,8 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{{url_for('admin.manage_post')}}">博客</a>
                             <a class="dropdown-item" href="{{url_for('admin.manage_comment')}}">评论</a>
-                            <a class="dropdown-item" href="#">分类</a>
+                            <a class="dropdown-item" href="{{url_for('admin.manage_category')}}">分类</a>
+                            <a class="dropdown-item" href="{{url_for('admin.manage_tag')}}">标签</a>
                         </div>
                     </li>
                     {% endif %}
@@ -121,6 +123,7 @@
     <script src="{{url_for('static',filename='js/jquery-slim.min.js')}}"></script>
     <script src="{{url_for('static',filename='js/popper.min.js')}}"></script>
     <script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/my.js')}}"></script>
     {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
     {{ moment.lang("zh-CN") }}
     {% block scripts %}{% endblock %}

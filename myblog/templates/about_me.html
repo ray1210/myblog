@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %} 关于作者 {% endblock title%}
+{% block title %} 关于博客 {% endblock title%}
 {% block main_content %}
 <div class="card">
-    <div class="card-header">关于作者</div>
+    <div class="card-header"><h2>关于博客</h2></div>
     <div class="card_body">
-        <div class="container h-100">
-        <p class="card-text">作者不会前端，博客长得很丑</p>
-        <p class="card-text">qq:761018513</p>
+        <div class="card-text">
+            {{about_me_html | safe}}
         </div>
     </div>
 </div>

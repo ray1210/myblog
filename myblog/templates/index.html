@@ -22,7 +22,10 @@
 {% endfor %}
 {% endblock main_content %}
 
+
 {% block pagination %}
 <!-- Pagination -->
+{% if pagination.total !=0 %}
 {{render_pagination(pagination)}}
+{% endif %}
 {% endblock pagination %}

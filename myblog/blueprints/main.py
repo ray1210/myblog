@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, url_for, request, current_app, redirect, flash
 from flask_login import current_user
 from myblog.models import Post, Category, Tag, Comment
-from myblog.plugins import db
+from myblog.plugins import db, md
 from myblog.forms import CommentForm, AdminCommentForm
+
 main_bp = Blueprint('main', __name__)
 
 
@@ -73,8 +74,8 @@ def reply_comment(comment_id):
 def show_category(category_id):
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['MYBLOG_POST_PER_PAGE']
-    pagination = Post.query.filter_by(category_id = category_id).order_by(Post.timestamp.desc()).paginate(page, per_page=per_page)
-    posts = posts = pagination.items
+    pagination = Post.query.filter_by(category_id=category_id).order_by(Post.timestamp.desc()).paginate(page, per_page=per_page)
+    posts = pagination.items
     return render_template('index.html', pagination=pagination, posts=posts)
 
 
@@ -90,4 +91,7 @@ def show_tag(tag_id):
 
 @main_bp.route('/about_me')
 def about_me():
-    return render_template('about_me.html')
+    about_me_md = current_app.config['MYBLOG_ABOUT_ME']
+    about_me_html = md.convert(current_app.config['MYBLOG_ABOUT_ME'])
+    md.reset()
+    return render_template('about_me.html', about_me_html = about_me_html)

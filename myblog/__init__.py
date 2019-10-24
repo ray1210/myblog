@@ -1,12 +1,13 @@
 from flask import Flask, render_template
 from flask_wtf.csrf import CSRFError
 from wtforms import HiddenField
+from flask_migrate import Migrate
 import click
 from myblog.plugins import db, moment, csrf, login_manager
 from myblog.config import config
 
 
-def create_app(config_name='production'):
+def create_app(config_name='development'):
     app = Flask('myblog')
     app.config.from_object(config[config_name])
     app.jinja_env.add_extension('jinja2.ext.do')
@@ -35,6 +36,8 @@ def register_plugins(app):
     moment.init_app(app)
     csrf.init_app(app)
     login_manager.init_app(app)
+    migrate = Migrate(app,db)
+
 
 
 def register_shell_context(app):
@@ -74,6 +77,7 @@ def register_commands(app):
     @app.cli.command()
     @click.option('--drop', is_flag=True, help='Create after drop.')
     def initdb(drop):
+        from myblog.fakes import fake_default
         """Initialize the database."""
         if drop:
             click.confirm('This operation will delete the database, do you want to continue?', abort=True)
@@ -81,6 +85,8 @@ def register_commands(app):
             click.echo('Drop tables.')
         db.create_all()
         click.echo('Initialized database.')
+        if drop:
+            fake_default()
 
     @app.cli.command()
     @click.option('--category', default=5, help='Quantity of categories, default is 10.')
@@ -89,11 +95,11 @@ def register_commands(app):
     @click.option('--comment', default=200, help='Quantity of comments, default is 500.')
     def forge(category, post, tag, comment):
         """Generate fake data."""
-        from myblog.fakes import  fake_categories, fake_posts, fake_tags, fake_comments
+        from myblog.fakes import  fake_categories, fake_posts, fake_tags, fake_comments, fake_default
 
         db.drop_all()
         db.create_all()
-
+        fake_default()
         click.echo('Generating %d categories...' % category)
         fake_categories(category)
 
@@ -112,7 +118,8 @@ def register_commands(app):
     @click.option('--password', default='admin')
     def setadmin(username,password):
         from sqlalchemy.exc import IntegrityError
+
         from myblog.models import Admin
-        account = Admin(username=username, password=password)
+        account = Admin(username=username, password=password, about_me="hello piccolo")
         db.session.add(account)
         db.session.commit()

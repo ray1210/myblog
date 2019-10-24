@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}管理标签{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="page-header mt-3">
+        <h5>标签({{ tags | length }})
+            <span class="float-right"><button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" href="#">新建标签</button></span>
+        </h5>
+    </div>
+    {% if tags %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Tag</th>
+                <th>Posts</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        {% for tag in tags %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td><a href="{{url_for('main.show_tag', tag_id = tag.id)}}">{{ tag.name }}</a></td>
+            <td>{{ tag.posts | length }}</td>
+            <td>
+                <form class="inline" method="post" action="{{ url_for('admin.delete_tag', tag_id=tag.id, next=request.full_path) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <button type="submit" class="btn btn-danger btn-sm mx-1" onclick="return confirm('Are you sure?');">删除
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="tip">
+        <h5>No tags.</h5>
+    </div>
+    {% endif %}
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    新建分类
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" method="post" action="{{url_for('admin.add_tag')}}">
+                    <div class="form-group">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                        <label class="control-label">新标签名称</label>
+                        <input type="text" class="form-control" name="new_tag" placeholder="请输入标签名">
+                    </div>
+                    <button type="submit" class="btn btn-primary">确定</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+{% endblock %}

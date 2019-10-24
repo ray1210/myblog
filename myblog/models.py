@@ -1,9 +1,7 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from markdown import markdown
-from markdown.extensions.fenced_code import FencedCodeExtension
-from markdown.extensions.codehilite import CodeHiliteExtension
+
 from myblog.plugins import db, md
 
 
@@ -15,6 +13,14 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True)
     posts = db.relationship('Post', back_populates='category')
+
+    def delete(self):
+        default_category = Category.query.get(1)
+        posts = self.posts[:]
+        for post in posts:
+            post.category = default_category
+        db.session.delete(self)
+        db.session.commit()
 
 
 class Post(db.Model):
@@ -44,11 +50,20 @@ class Tag(db.Model):
     name = db.Column(db.String(32), unique=True)
     posts = db.relationship('Post', secondary=association_table, back_populates='tags')
 
+    def delete(self):
+        default_tag = Tag.query.get(1)
+        for post in self.posts:
+            if len(post.tags) == 1:
+                post.tags[0] = default_tag
+        db.session.delete(self)
+        db.session.commit()
+
 
 class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), unique=True, nullable=False)
+    about_me = db.Column(db.Text)
 
     @property
     def password(self):

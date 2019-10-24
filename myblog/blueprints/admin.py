@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, url_for,flash, redirect, request, current_app
 from flask_login import login_required
+from sqlalchemy.exc import IntegrityError
 from myblog.models import Post, Admin, Category, Tag, Comment
 from myblog.utils import redirect_back
 from myblog.forms import PostForm
@@ -126,9 +127,11 @@ def manage_comment():
     else:
         filtered_comments = Comment.query
 
+    unread_comments_count = Comment.query.filter_by(reviewed=False).count()
+
     pagination = filtered_comments.order_by(Comment.timestamp.desc()).paginate(page, per_page=per_page)
     comments = pagination.items
-    return render_template('admin/manage_comment.html', comments=comments, pagination=pagination)
+    return render_template('admin/manage_comment.html', comments=comments, pagination=pagination,unread_comments_count=unread_comments_count)
 
 
 @admin_bp.route('/approve_comment/<int:comment_id>', methods=['POST'])
@@ -141,3 +144,64 @@ def approve_comment(comment_id):
     return redirect_back()
 
 
+@admin_bp.route('/delete_category/<int:category_id>', methods=['POST'])
+@login_required
+def delete_category(category_id):
+    if category_id == 1:
+        flash('默认分类不能删除', 'warning')
+        return redirect_back()
+
+    category = Category.query.get_or_404(category_id)
+    category.delete()
+    flash('分类{}删除成功.'.format(category.name), 'success')
+    return redirect_back()
+
+
+@admin_bp.route('/manage_category')
+@login_required
+def manage_category():
+    return render_template('admin/manage_category.html')
+
+
+@admin_bp.route('/add_category',methods=['POST'])
+@login_required
+def add_category():
+    name = request.form.get('new_category')
+    category = Category(name=name)
+    db.session.add(category)
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+    return redirect(url_for('admin.manage_category'))
+
+
+@admin_bp.route('/delete_tag/<int:tag_id>', methods=['POST'])
+@login_required
+def delete_tag(tag_id):
+    if tag_id == 1:
+        flash('默认标签不能删除', 'warning')
+        return redirect_back()
+    tag = Tag.query.get_or_404(tag_id)
+    tag.delete()
+    flash('标签{}删除成功.'.format(tag.name), 'success')
+    return redirect_back()
+
+
+@admin_bp.route('/manage_tag')
+@login_required
+def manage_tag():
+    return render_template('admin/manage_tag.html')
+
+
+@admin_bp.route('/add_tag', methods=['POST'])
+@login_required
+def add_tag():
+    name = request.form.get('new_tag')
+    tag = Tag(name=name)
+    db.session.add(tag)
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+    return redirect(url_for('admin.manage_tag'))

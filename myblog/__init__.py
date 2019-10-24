@@ -7,7 +7,7 @@ from myblog.plugins import db, moment, csrf, login_manager
 from myblog.config import config
 
 
-def create_app(config_name='development'):
+def create_app(config_name = 'production'):
     app = Flask('myblog')
     app.config.from_object(config[config_name])
     app.jinja_env.add_extension('jinja2.ext.do')
@@ -120,6 +120,6 @@ def register_commands(app):
         from sqlalchemy.exc import IntegrityError
 
         from myblog.models import Admin
-        account = Admin(username=username, password=password, about_me="hello piccolo")
+        account = Admin(username=username, password=password)
         db.session.add(account)
         db.session.commit()

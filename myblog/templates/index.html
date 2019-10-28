@@ -11,7 +11,7 @@
         创建于: {{ moment(post.timestamp).format('LL')}}
         <span class="post-foot-divider">|</span>
         <i class="fa fa-folder-o" aria-hidden="true"></i>
-        分类于: <a class="link-mute" href="{{url_for('main.show_category', category_id = post.category.id)}}">{{ post.category.name }}</a>
+        分类于: <a class="link-mute" href="{{url_for('main.show_category_detail', category_id = post.category.id)}}">{{ post.category.name }}</a>
         <span class="post-foot-divider">|</span>
         <i class="fa fa-eye" aria-hidden="true"></i>
         阅读次数: {{post.read_count}}
@@ -21,7 +21,7 @@
     <div class="mt-3 post-body">
         {{ post.body_html | striptags | truncate }}
         <div class="mt-2">
-        <a href="{{url_for('main.show_post',post_id=post.id, from_index=True)}}" class="btn btn-sm btn-outline-primary">阅读全文&rarr;</a>
+        <a href="{{url_for('main.show_post',post_id=post.id, from_index=True)}}" class="btn btn-sm btn-outline-primary">阅读全文</a>
         </div>
     </div>
 </article>

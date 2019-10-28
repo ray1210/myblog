@@ -14,6 +14,7 @@ def create_app(config_name = 'production'):
     app.jinja_env.globals['bootstrap_is_hidden_field'] = bootstrap_is_hidden_field
     register_plugins(app)
     register_template_context(app)
+    register_template_filter(app)
     # for  development
     register_shell_context(app)
     register_commands(app)
@@ -60,6 +61,14 @@ def register_template_context(app):
         tags = Tag.query.order_by(Tag.name).all()
         admin = Admin.query.first()
         return dict(categories=categories, tags=tags, admin=admin)
+
+def register_template_filter(app):
+    import re
+    @app.template_filter('read_more')
+    def truncate_read_more(text):
+        spliter = r'\s*<!--more-->\s*'
+        res = re.split(spliter, text)
+        return res[0]
 
 
 def register_errors(app):

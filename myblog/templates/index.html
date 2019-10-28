@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="mt-3 post-body">
-        {{ post.body_html | striptags | truncate }}
+        {{ post.body_html | read_more | safe }}
         <div class="mt-2">
         <a href="{{url_for('main.show_post',post_id=post.id, from_index=True)}}" class="btn btn-sm btn-outline-primary">阅读全文</a>
         </div>

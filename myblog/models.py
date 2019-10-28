@@ -2,7 +2,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
-from myblog.plugins import db, md
+from myblog.plugins import db, md, mistune_md
 
 
 association_table = db.Table('association', db.Column('post_id', db.Integer, db.ForeignKey('tag.id')),
@@ -38,8 +38,9 @@ class Post(db.Model):
 
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
-        target.body_html = md.convert(value)
-        md.reset()
+        #target.body_html = md.convert(value)
+        #md.reset()
+        target.body_html = mistune_md(value)
 
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)

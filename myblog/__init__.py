@@ -7,7 +7,7 @@ from myblog.plugins import db, moment, csrf, login_manager
 from myblog.config import config
 
 
-def create_app(config_name = 'production'):
+def create_app(config_name = 'development'):
     app = Flask('myblog')
     app.config.from_object(config[config_name])
     app.jinja_env.add_extension('jinja2.ext.do')

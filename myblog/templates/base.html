@@ -8,7 +8,7 @@
     <meta name="author" content="Piccolo">
     <title>Piccolo | {% block title%}Home{% endblock %}</title>
     <!-- Bootstrap core CSS -->
-    <link href="{{url_for('static',filename='css/bootstrap.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='css/bootstrap4-retro.min.css')}}" rel="stylesheet">
     <link href="{{url_for('static',filename='css/font-awesome.min.css')}}" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="{{url_for('static',filename='css/main.css')}}" rel="stylesheet">
@@ -18,28 +18,38 @@
 
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="body-container">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('main.index')}}">Piccolo</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item {% if request.endpoint == 'main.index' %}active{% endif %}">
-                        <a class="nav-link" href="{{ url_for('main.index')}}">主页</a>
+                <ul class="navbar-nav ml-5">
+                    <li class="nav-item mx-4 {% if request.endpoint == 'main.index' %}active{% endif %}">
+                        <a class="nav-link" href="{{ url_for('main.index')}}"><i class="fa fa-home" aria-hidden="true"></i>&nbsp主页</a>
                     </li>
-                    <li class="nav-item {% if request.endpoint == 'main.about_me' %}active{% endif %}">
-                        <a class="nav-link" href="{{url_for('main.about_me')}}">关于</a>
+                    <li class="nav-item mx-4 {% if request.endpoint == 'main.show_all_categories' %}active{% endif %}">
+                        <a class="nav-link" href="{{ url_for('main.show_all_categories')}}"><i class="fa fa-list" aria-hidden="true"></i>&nbsp分类</a>
+                    </li>
+                    <li class="nav-item mx-4 {% if request.endpoint == 'main.show_all_tags' %}active{% endif %}">
+                        <a class="nav-link" href="{{ url_for('main.show_all_tags')}}"><i class="fa fa-tags" aria-hidden="true"></i>&nbsp标签</a>
+                    </li>
+                    <li class="nav-item mx-4 {% if request.endpoint == 'main.show_all_posts' %}active{% endif %}">
+                        <a class="nav-link" href="{{ url_for('main.show_all_posts')}}"><i class="fa fa-archive" aria-hidden="true"></i>&nbsp归档</a>
+                    </li>
+                    <li class="nav-item mx-4 {% if request.endpoint == 'main.about_me' %}active{% endif %}">
+                        <a class="nav-link" href="{{url_for('main.about_me')}}"><i class="fa fa-user" aria-hidden="true"></i>&nbsp关于</a>
                     </li>
                     {% if current_user.is_authenticated %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">管理入口</a>
+                        <a class="nav-link dropdown-toggle active" data-toggle="dropdown" href="#"><i class="fa fa-gears" aria-hidden="true"></i>&nbsp管理</a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{{url_for('admin.manage_post')}}">博客</a>
                             <a class="dropdown-item" href="{{url_for('admin.manage_comment')}}">评论</a>
-                            <a class="dropdown-item" href="{{url_for('admin.manage_category')}}">分类</a>
-                            <a class="dropdown-item" href="{{url_for('admin.manage_tag')}}">标签</a>
+                            <a class="dropdown-item" href="{{url_for('main.show_all_categories')}}">分类</a>
+                            <a class="dropdown-item" href="{{url_for('main.show_all_tags')}}">标签</a>
                         </div>
                     </li>
                     {% endif %}
@@ -48,7 +58,7 @@
         </div>
     </nav>
     <!-- Page Content -->
-    <div class="container">
+    <div class="container main-container">
         {% for message in get_flashed_messages(with_categories=True) %}
         <div class="alert alert-{{ message[0] }}" role="alert">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -57,58 +67,18 @@
         {% endfor %}
         <div class="row">
             {% block content %}
-            <!-- Blog Entries Column -->
-            <div class="col-md-8 main-content">
+            <div class="col-12">
                 {% block main_content %}
                 {% endblock main_content %}
                 {% block pagination %}
                 {% endblock pagination %}
             </div>
-            <!-- Sidebar Widgets Column -->
-            <div class="col-md-4">
-                <!-- Categories Widget -->
-                <div class="card my-4">
-                    <h5 class="card-header">文章分类</h5>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <ul class="list-unstyled mb-0">
-                                    {% for category in categories %}
-                                    {% if loop.index%2 == 1 %}
-                                    <li><a class="link-mute" href="{{url_for('main.show_category', category_id = category.id)}}">{{ category.name }}({{category.posts|length}})</a></li>
-                                    {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            <div class="col-lg-6">
-                                <ul class="list-unstyled mb-0">
-                                    {% for category in categories %}
-                                    {% if loop.index%2 == 0 %}
-                                    <li><a class="link-mute" href="{{url_for('main.show_category', category_id = category.id)}}">{{ category.name }}({{category.posts|length}})</a></li>
-                                    {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card my-4">
-                    <h5 class="card-header">文章标签</h5>
-                    <div class="card-body">
-                        {% for tag in tags %}
-                        <button type="button" class="btn btn-dark mx-1 my-1 px-1 py-0">
-                            <a class="link-mute" href="{{url_for('main.show_tag', tag_id = tag.id)}}">{{tag.name}} &nbsp</a><span class="badge badge-dark">{{tag.posts|length}}</span>
-                        </button>
-                        {%endfor%}
-                    </div>
-                </div>
-            </div>
             {% endblock %}
         </div>
     </div>
     {% block footer %}
-    <footer class="py-3 bg-light">
-        <div class="container footer-container">
+    <footer class="py-4 bg-light text-center mt-5 text-muted post-footer">
+        <div>
             <span class="mx-1">Powered by <a class="link-mute" href="https://github.com/pallets/flask">flask</a></span>|
             <span class="mx-1"> @2019 &nbsp;<i class="fa fa-user" aria-hidden="true"></i>&nbsp piccolo</span>|
             {% if current_user.is_authenticated %}
@@ -119,6 +89,7 @@
         </div>
     </footer>
     {% endblock footer %}
+    </div>
     <!-- Bootstrap core JavaScript -->
     <script src="{{url_for('static',filename='js/jquery-slim.min.js')}}"></script>
     <script src="{{url_for('static',filename='js/popper.min.js')}}"></script>

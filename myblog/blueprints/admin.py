@@ -56,7 +56,7 @@ def manage_post():
     pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
         page, per_page=current_app.config['MYBLOG_POST_PER_PAGE'])
     posts = pagination.items
-    return render_template('admin/manage_post.html', page=page, pagination=pagination, posts=posts)
+    return render_template('posts/archive.html', page=page, pagination=pagination, posts=posts)
 
 
 
@@ -173,7 +173,7 @@ def add_category():
         db.session.commit()
     except IntegrityError:
         db.session.rollback()
-    return redirect(url_for('admin.manage_category'))
+    return redirect(url_for('main.show_all_categories'))
 
 
 @admin_bp.route('/delete_tag/<int:tag_id>', methods=['POST'])
@@ -191,7 +191,7 @@ def delete_tag(tag_id):
 @admin_bp.route('/manage_tag')
 @login_required
 def manage_tag():
-    return render_template('admin/manage_tag.html')
+    return render_template('posts/tags.html')
 
 
 @admin_bp.route('/add_tag', methods=['POST'])
@@ -204,4 +204,4 @@ def add_tag():
         db.session.commit()
     except IntegrityError:
         db.session.rollback()
-    return redirect(url_for('admin.manage_tag'))
+    return redirect(url_for('main.show_all_tags'))

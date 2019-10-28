@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% from 'macros/pagination.html' import render_pagination %}
+
+{% block title %}博客列表{% endblock %}
+
+{% block main_content %}
+<div class="mt-5">
+    <h5 class="d-inline-block">全部文章({{  pagination.total }})</h5>
+    {% if current_user.is_authenticated %}
+         <span class="float-right"><button class="btn btn-outline-primary btn-sm" href="{{ url_for('admin.new_post') }}">新建博客</button></span>
+     {% endif %}
+</div>
+<main class="mt-2">
+{% if posts %}
+<table class="table table-hover table-bordered">
+    <thead>
+    <tr>
+        <th>No.</th>
+        <th>标题</th>
+        <th>分类</th>
+        <th>标签</th>
+        <th>创建日期</th>
+        <th>评论数</th>
+        {% if current_user.is_authenticated %}
+        <th>Actions</th>
+        {% endif %}
+    </tr>
+    </thead>
+    {% for post in posts %}
+    <tr>
+        <td>{{ loop.index + ((page - 1) * config.MYBLOG_POST_PER_PAGE) }}</td>
+        <td><a href="{{ url_for('main.show_post', post_id=post.id) }}">{{ post.title }}</a></td>
+        <td><a href="{{ url_for('main.show_category_detail', category_id=post.category.id) }}">{{ post.category.name }}</a>
+        </td>
+         <td>
+             {% for tag in post.tags %}
+             <a href="{{url_for('main.show_tag_detail',tag_id=tag.id)}}">#{{tag.name}}</a>
+             {% endfor %}
+         </td>
+        <td>{{ moment(post.timestamp).format('LL') }}</td>
+        <td><a href="{{ url_for('main.show_post', post_id=post.id) }}#comments">{{ post.comments|length }}</a></td>
+
+        {% if current_user.is_authenticated %}
+        <td class="btn-group">
+            <form class="inline" method="post"
+                  action="{{ url_for('admin.set_comment', post_id=post.id, next=request.full_path) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-warning btn-sm mx-1">
+                    {% if post.can_comment %}关闭评论{% else %}开启评论{% endif %}
+                </button>
+            </form>
+            <a class="btn btn-info btn-sm mx-1" href="{{ url_for('admin.edit_post', post_id=post.id) }}">编辑</a>
+            <form class="inline" method="post"
+                  action="{{ url_for('admin.delete_post', post_id=post.id, next=request.full_path) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-danger btn-sm mx-1" onclick="return confirm('Are you sure?');">删除
+                </button>
+            </form>
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+<div class="page-footer">{{ render_pagination(pagination) }}</div>
+{% else %}
+<div class="tip"><h5>No posts.</h5></div>
+{% endif %}
+</main>
+{% endblock %}

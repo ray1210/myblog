@@ -2,13 +2,21 @@
 
 {% block title %} 关于博客 {% endblock title%}
 {% block main_content %}
-<div class="card">
+<article>
+    <div class="post-header">
+        <h1 class="mt-4 post-title">关于博客</h1>
+    </div>
+    <div class="mt-4 post-body">
+        {{about_me_html | safe}}
+    </div>
+</article>
+<!--div class="card">
     <div class="card-header"><h2>关于博客</h2></div>
     <div class="card_body">
         <div class="card-text">
             {{about_me_html | safe}}
         </div>
     </div>
-</div>
+</div-->
 {% endblock %}
 

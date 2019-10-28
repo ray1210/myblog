@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}分类列表{% endblock %}
+{% block main_content %}
+<div class="mt-5">
+    <h5 class="d-inline-block">全部分类({{ categories | length }})</h5>
+     {% if current_user.is_authenticated %}
+         <span class="float-right"><button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#myModal" href="#">新建分类</button></span>
+     {% endif %}
+</div>
+<main class="mt-2">
+ {% if categories %}
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>分类名称</th>
+                <th>文章数</th>
+                {% if current_user.is_authenticated %}
+                <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        {% for category in categories %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td><a href="{{url_for('main.show_category_detail', category_id = category.id)}}">{{ category.name }}</a></td>
+            <td>{{ category.posts | length }}</td>
+            {% if current_user.is_authenticated %}
+            <td>
+                <form class="inline" method="post" action="{{ url_for('admin.delete_category', category_id=category.id, next=request.full_path) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <button type="submit" class="btn btn-danger btn-sm mx-1" onclick="return confirm('Are you sure?');">删除
+                    </button>
+                </form>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="tip">
+        <h5>No categories.</h5>
+    </div>
+    {% endif %}
+</main>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    新建分类
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" method="post" action="{{url_for('admin.add_category')}}">
+                    <div class="form-group">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                        <label class="control-label">新分类名称</label>
+                        <input type="text" class="form-control" name="new_category" placeholder="请输入分类名">
+                    </div>
+                    <button type="submit" class="btn btn-primary">确定</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+{% endblock %}

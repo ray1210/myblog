@@ -4,13 +4,13 @@
 {% block title %}Login{% endblock %}
 
 {% block main_content %}
-<div class="h100 justify-content-center login-card">
 
-{{ render_form(form, extra_classes='col-6') }}
-
+<div class="login-container">
+{{ render_form(form) }}
 </div>
+
 
 {% endblock %}
 
-{% block footer %}{% endblock %}
+
 

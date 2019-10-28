@@ -61,3 +61,10 @@ a{
     margin: 200px auto;
     padding:50px
 }
+
+.comment-list
+{
+    margin-bottom: 0;
+    border:none;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}

@@ -45,8 +45,8 @@
         <a class="float-right" href="{{ url_for('.show_post', post_id=post.id) }}">Cancel</a>
     </div>
     {% endif %}
-    <div class="card-header">发表评论:</div>
-    <div class="card-body" id="comment-form">
+    <div class="card-header" id="comments">发表评论:</div>
+    <div class="card-body">
         <form method="post" action="{{request.full_path}}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
             {% if not bootstrap_is_hidden_field(form.author) %}
@@ -89,7 +89,7 @@
         {% if comments %}
         <ul class="list-group mb-3">
             {% for comment in comments %}
-            <li class="list-group-item list-group-item-action flex-column">
+            <li class="list-group-item list-group-item-action flex-column comment-list">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">
                         {% if comment.from_admin %}

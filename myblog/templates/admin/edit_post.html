@@ -4,7 +4,7 @@
 {% block title %}编辑博客{% endblock %}
 
 {% block main_content %}
-<div class="card">
+<div class="card mt-5">
   <div class="card-header">编辑博客</div>
   <div class="card-body">
       <form method="post" action="{{url_for('admin.edit_post', post_id = post.id)}}">
@@ -18,7 +18,7 @@
                                   {% if category == post.category %} checked {% endif %}/>
                             <label>{{category.name}} : </label>
                             {% endfor %}
-              <button class="btn btn-primary btn-sm ml-2" onclick="return onAddCategoryClick(this);">add</button>
+              <button class="btn btn-outline-primary btn-sm ml-2" onclick="return onAddCategoryClick(this);">add</button>
                   </div>
 
           </div>
@@ -31,7 +31,7 @@
                                   {% if tag in post.tags %} checked {% endif %}/>
                             <label>{{tag.name}} : </label>
                             {% endfor %}
-              <button class="btn btn-primary btn-sm ml-2" onclick="return onAddTagClick(this);">add</button>
+              <button class="btn btn-outline-primary btn-sm ml-2" onclick="return onAddTagClick(this);">add</button>
                   </div>
           </div>
           <div class="form-group">
@@ -42,7 +42,7 @@
               <label for="post_body">内容</label>
               {{ form.body(id="post_body", class="form-control", rows="15") }}
           </div>
-          <button type="submit" class="btn btn-primary" onclick="return onNewPostSubmitClick();">提交</button>
+          <button type="submit" class="btn btn-outline-primary" onclick="return onNewPostSubmitClick();">提交</button>
       </form>
   </div>
 

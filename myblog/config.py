@@ -41,7 +41,8 @@ class TestingConfig(BaseConfig):
 
 
 class ProductionConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://xielei:1234567890@127.0.0.1:3306/myblog'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://'+os.getenv('BLOG_DB_USERNAME', 'xxx')+':'\
+                              + os.getenv('BLOG_DB_PASSWORD', 'xxx')+'@127.0.0.1:3306/myblog'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     MYBLOG_ABOUT_ME = """
 #### 前端

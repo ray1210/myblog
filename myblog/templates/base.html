@@ -13,6 +13,7 @@
     <!-- Custom styles for this template -->
     <link href="{{url_for('static',filename='css/main.css')}}" rel="stylesheet">
     <link href="{{url_for('static',filename='css/code.css')}}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Noto Sans SC" rel="stylesheet">
 
 </head>
 
@@ -30,12 +31,32 @@
                     <li class="nav-item mx-4 {% if request.endpoint == 'main.index' %}active{% endif %}">
                         <a class="nav-link" href="{{ url_for('main.index')}}"><i class="fa fa-home" aria-hidden="true"></i>&nbsp主页</a>
                     </li>
-                    <li class="nav-item mx-4 {% if request.endpoint == 'main.show_all_categories' %}active{% endif %}">
+                    <li class="nav-item mx-4 dropdown">
+                        <button class="btn nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-list" aria-hidden="true"></i>&nbsp分类</button>
+                        <div class="dropdown-menu">
+                            {% for category in categories%}
+                            <a class="dropdown-item" href="{{url_for('main.show_category_detail',category_id=category.id)}}">
+                                {{category.name}}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                    <li class="nav-item mx-4 dropdown">
+                        <button class="btn nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-tags" aria-hidden="true"></i>&nbsp标签</button>
+                        <div class="dropdown-menu">
+                            {% for tag in tags%}
+                            <a class="dropdown-item" href="{{url_for('main.show_tag_detail',tag_id=tag.id)}}">
+                                {{tag.name}}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                    <!--li class="nav-item mx-4 {% if request.endpoint == 'main.show_all_categories' %}active{% endif %}">
                         <a class="nav-link" href="{{ url_for('main.show_all_categories')}}"><i class="fa fa-list" aria-hidden="true"></i>&nbsp分类</a>
                     </li>
                     <li class="nav-item mx-4 {% if request.endpoint == 'main.show_all_tags' %}active{% endif %}">
                         <a class="nav-link" href="{{ url_for('main.show_all_tags')}}"><i class="fa fa-tags" aria-hidden="true"></i>&nbsp标签</a>
-                    </li>
+                    </li-->
                     <li class="nav-item mx-4 {% if request.endpoint == 'main.show_all_posts' %}active{% endif %}">
                         <a class="nav-link" href="{{ url_for('main.show_all_posts')}}"><i class="fa fa-archive" aria-hidden="true"></i>&nbsp归档</a>
                     </li>
@@ -44,7 +65,7 @@
                     </li>
                     {% if current_user.is_authenticated %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle active" data-toggle="dropdown" href="#"><i class="fa fa-gears" aria-hidden="true"></i>&nbsp管理</a>
+                        <button class="btn nav-link dropdown-toggle active" data-toggle="dropdown"><i class="fa fa-gears" aria-hidden="true"></i>&nbsp管理</button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{{url_for('admin.manage_post')}}">博客</a>
                             <a class="dropdown-item" href="{{url_for('admin.manage_comment')}}">评论</a>

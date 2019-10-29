@@ -16,7 +16,7 @@ def index():
     return render_template('index.html', pagination=pagination, posts=posts)
 
 
-@main_bp.route('/show_post/<int:post_id>', methods = ['GET', 'POST'])
+@main_bp.route('/show_post/<int:post_id>', methods=['GET', 'POST'])
 def show_post(post_id):
     post = Post.query.get_or_404(post_id)
     page = request.args.get('page', 1, type=int)
@@ -83,7 +83,6 @@ def show_category(category_id):
 def show_tag(tag_id):
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['MYBLOG_POST_PER_PAGE']
-    Post.query.filter(Post.tags.any(id=tag_id))
     pagination = Post.query.filter(Post.tags.any(id=tag_id)).order_by(Post.timestamp.desc()).paginate(page, per_page=per_page)
     posts = pagination.items
     return render_template('index.html', pagination=pagination, posts=posts)
@@ -91,10 +90,7 @@ def show_tag(tag_id):
 
 @main_bp.route('/about_me')
 def about_me():
-    about_me_md = current_app.config['MYBLOG_ABOUT_ME']
-    about_me_html = md.convert(current_app.config['MYBLOG_ABOUT_ME'])
-    md.reset()
-    return render_template('about_me.html', about_me_html = about_me_html)
+    return render_template('about_me.html')
 
 
 @main_bp.route('/show_all_categories')
@@ -118,10 +114,12 @@ def show_all_posts():
 @main_bp.route('/show_tag_detail/<int:tag_id>')
 def show_tag_detail(tag_id):
     tag = Tag.query.get_or_404(tag_id)
-    return render_template('posts/tag_detail.html', tag=tag)
+    posts = Post.query.filter(Post.tags.any(id=tag_id)).order_by(Post.timestamp.desc()).all()
+    return render_template('posts/tag_detail.html', tag=tag, posts=posts)
 
 
 @main_bp.route('/show_category_detail/<int:category_id>')
 def show_category_detail(category_id):
     category = Category.query.get_or_404(category_id)
-    return render_template('posts/category_detail.html', category=category)
+    posts = Post.query.filter(Post.category_id == category.id).order_by(Post.timestamp.desc()).all()
+    return render_template('posts/category_detail.html', category=category, posts=posts)

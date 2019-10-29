@@ -26,3 +26,8 @@ class CommentForm(FlaskForm):
 class AdminCommentForm(CommentForm):
     author = HiddenField()
     email = HiddenField()
+
+
+class AdminAboutForm(FlaskForm):
+    title = StringField('about_title', validators=[DataRequired(), Length(1, 128)])
+    body = TextAreaField('body', validators=[DataRequired()])

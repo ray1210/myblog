@@ -53,12 +53,13 @@ def bootstrap_is_hidden_field(field):
 
 
 def register_template_context(app):
-
     @app.context_processor
     def make_template_context():
         from myblog.models import Category, Tag, Post, Admin
         categories = Category.query.order_by(Category.name).all()
-        tags = Tag.query.order_by(Tag.name).all()
+        categories.sort(key=lambda x: len(x.posts), reverse=True)
+        tags = Tag.query.all()
+        tags.sort(key=lambda x: len(x.posts),reverse=True)
         admin = Admin.query.first()
         return dict(categories=categories, tags=tags, admin=admin)
 

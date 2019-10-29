@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% from 'macros/form.html' import render_form %}
+
+{% block title %}编辑关于我{% endblock %}
+
+{% block main_content %}
+<div class="card mt-5">
+  <div class="card-header">编辑关于我</div>
+  <div class="card-body">
+      <form method="post" action="{{url_for('admin.edit_about')}}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+          <div class="form-group">
+              <label for="about_title">标题</label>
+              {{ form.title(id="about_title", class="form-control") }}
+          </div>
+          <div class="form-group">
+              <label for="about_body">内容</label>
+              {{ form.body(id="about_body", class="form-control", rows="15") }}
+          </div>
+          <button type="submit" class="btn btn-outline-primary">提交</button>
+      </form>
+  </div>
+
+</div>
+{% endblock %}

@@ -3,7 +3,7 @@ from flask_login import login_required
 from sqlalchemy.exc import IntegrityError
 from myblog.models import Post, Admin, Category, Tag, Comment
 from myblog.utils import redirect_back
-from myblog.forms import PostForm
+from myblog.forms import PostForm, AdminAboutForm
 from myblog.plugins import db
 admin_bp = Blueprint('admin', __name__)
 
@@ -205,3 +205,21 @@ def add_tag():
     except IntegrityError:
         db.session.rollback()
     return redirect(url_for('main.show_all_tags'))
+
+
+@admin_bp.route('/edit_about', methods=['GET','POST'])
+@login_required
+def edit_about():
+    form = AdminAboutForm()
+    admin = Admin.query.first_or_404()
+    if form.validate_on_submit():
+        from myblog.plugins import mistune_md
+        admin.about_title = form.title.data
+        admin.about = form.body.data
+        admin.about_html = mistune_md(form.body.data)
+        db.session.commit()
+        return redirect(url_for('main.about_me'))
+    form.title.data = admin.about_title
+    form.body.data = admin.about
+    return render_template('admin/edit_about.html', form=form)
+

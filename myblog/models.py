@@ -2,7 +2,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
-from myblog.plugins import db, md, mistune_md
+from myblog.plugins import db, mistune_md
 
 
 association_table = db.Table('association', db.Column('post_id', db.Integer, db.ForeignKey('tag.id')),

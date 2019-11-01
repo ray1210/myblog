@@ -8,6 +8,10 @@ html, body{
     min-height: 100%;
 }
 
+table{
+
+}
+
 .post-block{
 
 }
@@ -106,9 +110,10 @@ pre{
     font-size: 1.2rem;
     font-weight: bold;
     border-bottom: 1px solid #212529;
-
+    position: relative;
 }
 
 .post-archive-item{
     border-bottom: 1px dashed #ccc;
 }
+

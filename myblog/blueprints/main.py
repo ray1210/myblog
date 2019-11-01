@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, url_for, request, current_app, redirect, flash
 from flask_login import current_user
 from myblog.models import Post, Category, Tag, Comment
-from myblog.plugins import db, md
+from myblog.plugins import db
 from myblog.forms import CommentForm, AdminCommentForm
 
 main_bp = Blueprint('main', __name__)

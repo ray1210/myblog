@@ -14,7 +14,7 @@
     {% set ns=namespace(old_year=0) %}
     {% for post in posts %}
     {% if post.timestamp.year != ns.old_year %}
-    <div class="mt-4 mb-2 d-inline-block post-archive-title">{{post.timestamp.year}}年</div>
+    <div class="mt-4 d-inline-block post-archive-title">{{post.timestamp.year}}年</div>
     {% endif %}
     <div class="mt-2 pb-2 post-archive-item">
         {{moment(post.timestamp).format('MM-DD')}}:

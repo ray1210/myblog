@@ -28,7 +28,7 @@ login_manager.login_view = 'auth.login'
 login_manager.login_message_category = 'warning'
 
 
-class CustomRenderer(mistune.Renderer):
+class CustomRenderer(mistune.HTMLRenderer):
     def block_code(self, code, lang):
         if not lang:
             lang = 'bash'
